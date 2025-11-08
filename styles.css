@@ -95,24 +95,78 @@ body {
     100% { transform: translate(50px, 50px); }
 }
 
-/* Particle system */
-.particle {
+/* Floating Bubbles System */
+.bubble {
     position: absolute;
-    background: rgba(255, 255, 255, 0.6);
     border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.05));
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow:
+        inset 0 0 20px rgba(255, 255, 255, 0.15),
+        0 8px 32px rgba(0, 0, 0, 0.1);
     pointer-events: none;
-    animation: particleFloat 3s ease-out forwards;
+    animation: bubbleFloat 15s ease-in-out infinite;
 }
 
-@keyframes particleFloat {
-    0% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
+.bubble::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    width: 40%;
+    height: 40%;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    filter: blur(10px);
+}
+
+.bubble::after {
+    content: '';
+    position: absolute;
+    bottom: 15%;
+    right: 15%;
+    width: 20%;
+    height: 20%;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    filter: blur(5px);
+}
+
+@keyframes bubbleFloat {
+    0%, 100% {
+        transform: translate(0, 0) rotate(0deg);
     }
-    100% {
-        opacity: 0;
-        transform: translateY(-100px) scale(0);
+    25% {
+        transform: translate(100px, -150px) rotate(90deg);
     }
+    50% {
+        transform: translate(-50px, -300px) rotate(180deg);
+    }
+    75% {
+        transform: translate(-150px, -150px) rotate(270deg);
+    }
+}
+
+@keyframes bubbleFloatAlt {
+    0%, 100% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+    25% {
+        transform: translate(-120px, -100px) rotate(-90deg) scale(1.1);
+    }
+    50% {
+        transform: translate(80px, -250px) rotate(-180deg) scale(0.9);
+    }
+    75% {
+        transform: translate(150px, -120px) rotate(-270deg) scale(1.05);
+    }
+}
+
+body.dark-mode .bubble {
+    background: radial-gradient(circle at 30% 30%, rgba(255, 100, 150, 0.15), rgba(255, 50, 100, 0.03));
+    border-color: rgba(255, 100, 150, 0.15);
 }
 
 .gradient-orb {

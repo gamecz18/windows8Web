@@ -22,45 +22,115 @@ function setupDarkMode() {
     });
 }
 
-// Interactive Particle System
-function createParticle(x, y) {
-    const particle = document.createElement('div');
-    particle.className = 'particle';
+// Floating Bubbles System
+const bubbles = [];
 
-    const size = Math.random() * 5 + 3;
-    particle.style.width = size + 'px';
-    particle.style.height = size + 'px';
-    particle.style.left = x + 'px';
-    particle.style.top = y + 'px';
+function createBubble() {
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
 
-    document.querySelector('.background').appendChild(particle);
+    // Random size between 40px and 150px
+    const size = Math.random() * 110 + 40;
+    bubble.style.width = size + 'px';
+    bubble.style.height = size + 'px';
 
-    setTimeout(() => {
-        particle.remove();
-    }, 3000);
+    // Random starting position
+    const x = Math.random() * window.innerWidth;
+    const y = window.innerHeight + 100; // Start below screen
+    bubble.style.left = x + 'px';
+    bubble.style.top = y + 'px';
+
+    // Random animation duration
+    const duration = Math.random() * 10 + 15; // 15-25 seconds
+    bubble.style.animationDuration = duration + 's';
+
+    // Alternate animation for variety
+    if (Math.random() > 0.5) {
+        bubble.style.animationName = 'bubbleFloatAlt';
+    }
+
+    // Random animation delay
+    const delay = Math.random() * 5;
+    bubble.style.animationDelay = delay + 's';
+
+    // Random opacity
+    bubble.style.opacity = Math.random() * 0.3 + 0.3; // 0.3 to 0.6
+
+    document.querySelector('.background').appendChild(bubble);
+
+    bubbles.push({
+        element: bubble,
+        x: x,
+        y: y,
+        size: size,
+        vx: (Math.random() - 0.5) * 2,
+        vy: -Math.random() * 1 - 0.5
+    });
+
+    return bubble;
 }
 
-// Mouse move particle effect
-let lastParticleTime = 0;
+// Mouse interaction with bubbles
+let mouseX = 0;
+let mouseY = 0;
+
 function setupInteractiveBackground() {
+    // Create initial bubbles
+    const bubbleCount = 15;
+    for (let i = 0; i < bubbleCount; i++) {
+        setTimeout(() => {
+            createBubble();
+        }, i * 500);
+    }
+
+    // Track mouse position
     document.addEventListener('mousemove', (e) => {
-        const now = Date.now();
-        if (now - lastParticleTime > 50) { // Throttle particle creation
-            createParticle(e.clientX, e.clientY);
-            lastParticleTime = now;
-        }
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+
+        // Make bubbles react to mouse
+        bubbles.forEach(bubbleData => {
+            const bubble = bubbleData.element;
+            const rect = bubble.getBoundingClientRect();
+            const bubbleCenterX = rect.left + rect.width / 2;
+            const bubbleCenterY = rect.top + rect.height / 2;
+
+            const dx = mouseX - bubbleCenterX;
+            const dy = mouseY - bubbleCenterY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            // If mouse is near bubble (within 150px), push it away
+            if (distance < 150) {
+                const force = (150 - distance) / 150;
+                const angle = Math.atan2(dy, dx);
+                const moveX = -Math.cos(angle) * force * 50;
+                const moveY = -Math.sin(angle) * force * 50;
+
+                bubble.style.transform = `translate(${moveX}px, ${moveY}px) scale(${1 + force * 0.2})`;
+                bubble.style.transition = 'transform 0.3s ease-out';
+            } else {
+                bubble.style.transform = '';
+            }
+        });
     });
 
-    // Click creates multiple particles
-    document.addEventListener('click', (e) => {
-        for (let i = 0; i < 5; i++) {
-            setTimeout(() => {
-                const offsetX = (Math.random() - 0.5) * 20;
-                const offsetY = (Math.random() - 0.5) * 20;
-                createParticle(e.clientX + offsetX, e.clientY + offsetY);
-            }, i * 50);
+    // Create new bubbles periodically
+    setInterval(() => {
+        if (bubbles.length < 20) {
+            createBubble();
         }
-    });
+    }, 3000);
+
+    // Remove bubbles that are off screen
+    setInterval(() => {
+        bubbles.forEach((bubbleData, index) => {
+            const rect = bubbleData.element.getBoundingClientRect();
+            if (rect.bottom < -200 || rect.top > window.innerHeight + 200) {
+                bubbleData.element.remove();
+                bubbles.splice(index, 1);
+            }
+        });
+    }, 5000);
 }
 
 // Update time and date
@@ -324,7 +394,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('🪟 Windows 8 + Liquid Glass - Initialized');
     console.log('✨ Enjoy the glassmorphism experience!');
     console.log('🌓 Dark mode available - click the toggle in the header');
-    console.log('✨ Interactive background - move your mouse!');
+    console.log('🫧 Interactive bubbles - move your mouse near them!');
 });
 
 // Performance optimization - reduce animations on low-end devices
