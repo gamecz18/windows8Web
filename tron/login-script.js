@@ -293,3 +293,48 @@ function setupParticles() {
 
 // Initialize particles
 setupParticles();
+
+// Create floating bubbles
+function createBubble() {
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+
+    // Random size between 40px and 120px
+    const size = Math.random() * 80 + 40;
+    bubble.style.width = size + 'px';
+    bubble.style.height = size + 'px';
+
+    // Random starting position
+    const x = Math.random() * window.innerWidth;
+    const y = window.innerHeight + 50;
+    bubble.style.left = x + 'px';
+    bubble.style.top = y + 'px';
+
+    // Random animation duration
+    const duration = Math.random() * 12 + 18;
+    bubble.style.animationDuration = duration + 's';
+
+    // Random animation delay
+    const delay = Math.random() * 5;
+    bubble.style.animationDelay = delay + 's';
+
+    // Random opacity
+    bubble.style.opacity = Math.random() * 0.4 + 0.2;
+
+    document.querySelector('.background').appendChild(bubble);
+
+    // Remove bubble after animation
+    setTimeout(() => {
+        bubble.remove();
+    }, (duration + delay) * 1000);
+}
+
+// Create initial bubbles
+for (let i = 0; i < 12; i++) {
+    setTimeout(() => createBubble(), i * 400);
+}
+
+// Create new bubbles periodically
+setInterval(() => {
+    createBubble();
+}, 3500);
