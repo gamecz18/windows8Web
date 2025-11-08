@@ -78,7 +78,7 @@ function setupPhysics() {
 
     physicsEngine = Engine.create();
     physicsWorld = physicsEngine.world;
-    physicsWorld.gravity.y = 2;
+    physicsWorld.gravity.y = 3.5; // Stronger gravity for more dramatic fall
 
     // Create invisible renderer (we'll render fragments ourselves)
     Runner.run(physicsEngine);
@@ -193,52 +193,121 @@ function engraveUsername(username) {
     }, startDelay);
 }
 
-// Create a fragment that falls with physics
+// Create a fragment that falls with physics - laser cuts letter into TOP and BOTTOM halves
 function createFallingFragment(letterRect, char) {
     const { Bodies, World } = Matter;
 
-    // Create fragment element
-    const fragment = document.createElement('div');
-    fragment.className = 'falling-fragment';
-    fragment.textContent = char;
-    fragment.style.left = letterRect.left + 'px';
-    fragment.style.top = letterRect.top + 'px';
-    fragment.style.width = letterRect.width + 'px';
-    fragment.style.height = letterRect.height + 'px';
-    document.body.appendChild(fragment);
+    const centerX = letterRect.left + letterRect.width / 2;
+    const centerY = letterRect.top + letterRect.height / 2;
 
-    // Create Matter.js body
-    const fragmentBody = Bodies.rectangle(
-        letterRect.left + letterRect.width / 2,
-        letterRect.top + letterRect.height / 2,
+    // Create cut line visualization
+    createCutLine(letterRect.left, centerY, letterRect.right, centerY);
+
+    // Create TOP HALF of the letter
+    const topHalf = document.createElement('div');
+    topHalf.className = 'falling-fragment top-half';
+    topHalf.textContent = char;
+    topHalf.style.left = letterRect.left + 'px';
+    topHalf.style.top = letterRect.top + 'px';
+    topHalf.style.width = letterRect.width + 'px';
+    topHalf.style.height = letterRect.height + 'px';
+    topHalf.style.clipPath = 'inset(0 0 50% 0)'; // Show only top half
+    document.body.appendChild(topHalf);
+
+    // Create BOTTOM HALF of the letter
+    const bottomHalf = document.createElement('div');
+    bottomHalf.className = 'falling-fragment bottom-half';
+    bottomHalf.textContent = char;
+    bottomHalf.style.left = letterRect.left + 'px';
+    bottomHalf.style.top = letterRect.top + 'px';
+    bottomHalf.style.width = letterRect.width + 'px';
+    bottomHalf.style.height = letterRect.height + 'px';
+    bottomHalf.style.clipPath = 'inset(50% 0 0 0)'; // Show only bottom half
+    document.body.appendChild(bottomHalf);
+
+    // Physics for TOP HALF - flies upward and to the left
+    const topBody = Bodies.rectangle(
+        centerX,
+        letterRect.top + letterRect.height / 4,
         letterRect.width,
-        letterRect.height,
+        letterRect.height / 2,
         {
-            restitution: 0.3,
-            friction: 0.5,
-            density: 0.002,
-            angle: (Math.random() - 0.5) * 0.3,
-            angularVelocity: (Math.random() - 0.5) * 0.2,
-            force: {
-                x: (Math.random() - 0.5) * 0.05,
-                y: -0.02
-            }
+            restitution: 0.5,
+            friction: 0.4,
+            density: 0.003,
+            angle: (Math.random() - 0.5) * 0.5,
+            angularVelocity: (Math.random() - 1) * 0.4, // Spin counter-clockwise
         }
     );
 
-    World.add(physicsWorld, fragmentBody);
-
-    // Store fragment data
-    fallingFragments.push({
-        element: fragment,
-        body: fragmentBody,
-        createdAt: Date.now()
+    // Apply strong upward and leftward force to top half
+    Matter.Body.applyForce(topBody, topBody.position, {
+        x: -(Math.random() * 0.15 + 0.1),
+        y: -(Math.random() * 0.2 + 0.15)
     });
 
-    // Create more intense sparks for ejection
-    const centerX = letterRect.left + letterRect.width / 2;
-    const centerY = letterRect.top + letterRect.height / 2;
-    createSparks(centerX, centerY, 20);
+    World.add(physicsWorld, topBody);
+
+    // Physics for BOTTOM HALF - flies downward and to the right
+    const bottomBody = Bodies.rectangle(
+        centerX,
+        letterRect.top + letterRect.height * 3 / 4,
+        letterRect.width,
+        letterRect.height / 2,
+        {
+            restitution: 0.5,
+            friction: 0.4,
+            density: 0.003,
+            angle: (Math.random() - 0.5) * 0.5,
+            angularVelocity: Math.random() * 0.4, // Spin clockwise
+        }
+    );
+
+    // Apply strong downward and rightward force to bottom half
+    Matter.Body.applyForce(bottomBody, bottomBody.position, {
+        x: Math.random() * 0.15 + 0.1,
+        y: Math.random() * 0.1 + 0.05
+    });
+
+    World.add(physicsWorld, bottomBody);
+
+    // Store both fragments
+    fallingFragments.push({
+        element: topHalf,
+        body: topBody,
+        createdAt: Date.now(),
+        isTopHalf: true
+    });
+
+    fallingFragments.push({
+        element: bottomHalf,
+        body: bottomBody,
+        createdAt: Date.now(),
+        isBottomHalf: true
+    });
+
+    // Create intense sparks at cut point
+    createSparks(centerX, centerY, 30);
+}
+
+// Visualize the laser cut line
+function createCutLine(x1, y, x2, yEnd) {
+    const cutLine = document.createElement('div');
+    cutLine.className = 'cut-line';
+    cutLine.style.left = x1 + 'px';
+    cutLine.style.top = y + 'px';
+    cutLine.style.width = (x2 - x1) + 'px';
+    document.body.appendChild(cutLine);
+
+    // Animate cut line
+    setTimeout(() => {
+        cutLine.classList.add('active');
+    }, 10);
+
+    // Remove after animation
+    setTimeout(() => {
+        cutLine.remove();
+    }, 500);
 }
 
 // Update physics fragments positions
@@ -281,37 +350,44 @@ function updatePhysicsFragments() {
 function shatterFragment(frag) {
     const { Bodies, World } = Matter;
     const pos = frag.body.position;
+    const velocity = frag.body.velocity;
     const rect = frag.element.getBoundingClientRect();
 
-    // Create 3-5 smaller shards
-    const shardCount = Math.floor(Math.random() * 3) + 3;
+    // Create 5-8 smaller shards for more dramatic effect
+    const shardCount = Math.floor(Math.random() * 4) + 5;
 
     for (let i = 0; i < shardCount; i++) {
         const shard = document.createElement('div');
         shard.className = 'fragment-shard';
         shard.style.left = rect.left + 'px';
         shard.style.top = rect.top + 'px';
-        shard.style.width = (rect.width / 2) + 'px';
-        shard.style.height = (rect.height / 2) + 'px';
+        shard.style.width = (rect.width / 3) + 'px';
+        shard.style.height = (rect.height / 3) + 'px';
         document.body.appendChild(shard);
 
+        // Random angle for shard ejection
+        const angle = (Math.random() * 180 + 180) * Math.PI / 180; // Spray upward
+        const speed = Math.random() * 0.3 + 0.2;
+
         const shardBody = Bodies.rectangle(
-            pos.x + (Math.random() - 0.5) * 20,
+            pos.x + (Math.random() - 0.5) * 30,
             pos.y,
-            rect.width / 2,
-            rect.height / 2,
+            rect.width / 3,
+            rect.height / 3,
             {
-                restitution: 0.4,
-                friction: 0.6,
+                restitution: 0.6,
+                friction: 0.5,
                 density: 0.001,
                 angle: Math.random() * Math.PI * 2,
-                angularVelocity: (Math.random() - 0.5) * 0.3,
-                force: {
-                    x: (Math.random() - 0.5) * 0.03,
-                    y: -0.01
-                }
+                angularVelocity: (Math.random() - 0.5) * 0.8, // More rotation
             }
         );
+
+        // Apply explosive force based on impact velocity
+        Matter.Body.applyForce(shardBody, shardBody.position, {
+            x: Math.cos(angle) * speed,
+            y: Math.sin(angle) * speed
+        });
 
         World.add(physicsWorld, shardBody);
 
@@ -323,8 +399,8 @@ function shatterFragment(frag) {
         });
     }
 
-    // Create impact sparks
-    createSparks(pos.x, pos.y, 15);
+    // Create massive impact sparks
+    createSparks(pos.x, pos.y, 25);
 }
 
 // Create spark particles at laser impact

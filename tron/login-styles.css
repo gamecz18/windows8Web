@@ -962,6 +962,44 @@ body {
     }
 }
 
+/* Laser Cut Line Visualization */
+.cut-line {
+    position: fixed;
+    height: 3px;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 1) 20%,
+        rgba(255, 59, 59, 1) 50%,
+        rgba(255, 255, 255, 1) 80%,
+        transparent 100%
+    );
+    box-shadow:
+        0 0 20px rgba(255, 255, 255, 1),
+        0 0 40px rgba(255, 59, 59, 1),
+        0 0 60px rgba(255, 27, 68, 0.8);
+    pointer-events: none;
+    z-index: 1001;
+    opacity: 0;
+    transition: opacity 0.1s ease-out;
+}
+
+.cut-line.active {
+    opacity: 1;
+    animation: cutLineFlash 0.3s ease-out;
+}
+
+@keyframes cutLineFlash {
+    0%, 100% {
+        filter: brightness(2);
+        transform: scaleY(1);
+    }
+    50% {
+        filter: brightness(5);
+        transform: scaleY(2);
+    }
+}
+
 /* Falling Fragment with Physics */
 .falling-fragment {
     position: fixed;
@@ -995,8 +1033,18 @@ body {
     align-items: center;
     justify-content: center;
     transform-origin: center center;
-    filter: brightness(1.2);
-    animation: fragmentGlow 0.5s ease-out;
+    filter: brightness(1.3) drop-shadow(0 0 20px rgba(255, 59, 59, 0.8));
+    animation: fragmentGlow 0.3s ease-out;
+}
+
+/* Top half has extra hot glow on bottom edge */
+.falling-fragment.top-half {
+    filter: brightness(1.5) drop-shadow(0 10px 30px rgba(255, 255, 255, 0.8));
+}
+
+/* Bottom half has extra hot glow on top edge */
+.falling-fragment.bottom-half {
+    filter: brightness(1.5) drop-shadow(0 -10px 30px rgba(255, 255, 255, 0.8));
 }
 
 @keyframes fragmentGlow {
@@ -1019,17 +1067,32 @@ body {
     z-index: 996;
     background: linear-gradient(
         135deg,
-        rgba(139, 0, 0, 0.9) 0%,
-        rgba(60, 0, 0, 0.7) 50%,
-        rgba(20, 0, 0, 0.5) 100%
+        rgba(255, 100, 100, 0.95) 0%,
+        rgba(139, 0, 0, 0.9) 40%,
+        rgba(60, 0, 0, 0.8) 70%,
+        rgba(20, 0, 0, 0.6) 100%
     );
-    border: 1px solid rgba(255, 59, 59, 0.6);
+    border: 2px solid rgba(255, 59, 59, 0.9);
     box-shadow:
-        0 0 15px rgba(255, 59, 59, 0.8),
-        0 0 30px rgba(255, 27, 68, 0.6),
-        inset 0 0 10px rgba(0, 0, 0, 0.9);
+        0 0 20px rgba(255, 59, 59, 1),
+        0 0 40px rgba(255, 27, 68, 0.8),
+        0 0 60px rgba(255, 59, 59, 0.6),
+        inset 0 0 15px rgba(255, 255, 255, 0.3);
     transform-origin: center center;
-    filter: brightness(1.1);
+    filter: brightness(1.4);
+    animation: shardGlow 0.3s ease-out;
+}
+
+@keyframes shardGlow {
+    0% {
+        filter: brightness(3);
+        box-shadow:
+            0 0 40px rgba(255, 255, 255, 1),
+            0 0 60px rgba(255, 59, 59, 1);
+    }
+    100% {
+        filter: brightness(1.4);
+    }
 }
 
 /* Add smoke trail to falling fragments */
