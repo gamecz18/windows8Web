@@ -1,3 +1,68 @@
+// Dark Mode Toggle
+function setupDarkMode() {
+    const toggle = document.getElementById('darkModeToggle');
+    const body = document.body;
+
+    // Check for saved preference
+    const darkMode = localStorage.getItem('darkMode');
+    if (darkMode === 'enabled') {
+        body.classList.add('dark-mode');
+    }
+
+    // Toggle dark mode
+    toggle.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+
+        // Save preference
+        if (body.classList.contains('dark-mode')) {
+            localStorage.setItem('darkMode', 'enabled');
+        } else {
+            localStorage.setItem('darkMode', 'disabled');
+        }
+    });
+}
+
+// Interactive Particle System
+function createParticle(x, y) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+
+    const size = Math.random() * 5 + 3;
+    particle.style.width = size + 'px';
+    particle.style.height = size + 'px';
+    particle.style.left = x + 'px';
+    particle.style.top = y + 'px';
+
+    document.querySelector('.background').appendChild(particle);
+
+    setTimeout(() => {
+        particle.remove();
+    }, 3000);
+}
+
+// Mouse move particle effect
+let lastParticleTime = 0;
+function setupInteractiveBackground() {
+    document.addEventListener('mousemove', (e) => {
+        const now = Date.now();
+        if (now - lastParticleTime > 50) { // Throttle particle creation
+            createParticle(e.clientX, e.clientY);
+            lastParticleTime = now;
+        }
+    });
+
+    // Click creates multiple particles
+    document.addEventListener('click', (e) => {
+        for (let i = 0; i < 5; i++) {
+            setTimeout(() => {
+                const offsetX = (Math.random() - 0.5) * 20;
+                const offsetY = (Math.random() - 0.5) * 20;
+                createParticle(e.clientX + offsetX, e.clientY + offsetY);
+            }, i * 50);
+        }
+    });
+}
+
 // Update time and date
 function updateTime() {
     const now = new Date();
@@ -174,8 +239,8 @@ function setupKeyboardNavigation() {
 
 // Random tile content updates (simulating live tiles)
 function setupLiveTiles() {
-    const taskTile = document.querySelector('.tile-blue .live-info');
-    const statsTile = document.querySelector('.tile-indigo .live-info');
+    const taskTile = document.querySelector('.tile-red .live-info');
+    const statsTile = document.querySelector('.tile-scarlet .live-info');
 
     if (taskTile) {
         setInterval(() => {
@@ -233,6 +298,12 @@ document.head.appendChild(bounceStyle);
 
 // Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
+    // Setup dark mode first (before anything else)
+    setupDarkMode();
+
+    // Setup interactive background
+    setupInteractiveBackground();
+
     // Update time immediately and then every second
     updateTime();
     setInterval(updateTime, 1000);
@@ -252,6 +323,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     console.log('🪟 Windows 8 + Liquid Glass - Initialized');
     console.log('✨ Enjoy the glassmorphism experience!');
+    console.log('🌓 Dark mode available - click the toggle in the header');
+    console.log('✨ Interactive background - move your mouse!');
 });
 
 // Performance optimization - reduce animations on low-end devices
