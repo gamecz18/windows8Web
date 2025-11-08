@@ -8,36 +8,6 @@ document.addEventListener('mousemove', (e) => {
     mouseY = e.clientY;
 });
 
-// Custom Cursor
-function setupCustomCursor() {
-    const cursor = document.querySelector('.custom-cursor');
-    const trail = document.querySelector('.cursor-trail');
-
-    document.addEventListener('mousemove', (e) => {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
-
-        // Trail follows with delay
-        setTimeout(() => {
-            trail.style.left = e.clientX + 'px';
-            trail.style.top = e.clientY + 'px';
-        }, 50);
-    });
-
-    // Cursor grows on clickable elements
-    const clickables = document.querySelectorAll('button, a, .tilt-card');
-    clickables.forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            cursor.style.transform = 'scale(2)';
-            cursor.style.borderColor = '#c2185b';
-        });
-        el.addEventListener('mouseleave', () => {
-            cursor.style.transform = 'scale(1)';
-            cursor.style.borderColor = '#ff3b3b';
-        });
-    });
-}
-
 // Magnetic Buttons
 function setupMagneticButtons() {
     const buttons = document.querySelectorAll('.magnetic-button');
@@ -252,7 +222,6 @@ document.head.appendChild(rippleStyle);
 
 // Initialize everything
 document.addEventListener('DOMContentLoaded', () => {
-    setupCustomCursor();
     setupMagneticButtons();
     setupTiltCards();
     setupRepelEffect();

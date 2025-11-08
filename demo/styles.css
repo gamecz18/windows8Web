@@ -21,7 +21,6 @@ body {
     color: var(--text);
     min-height: 100vh;
     overflow-x: hidden;
-    cursor: none;
 }
 
 /* Animated Background Grid */
@@ -102,7 +101,7 @@ body {
     color: white;
     border: none;
     border-radius: 15px;
-    cursor: none;
+    cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 8px 32px rgba(255, 59, 59, 0.3);
     position: relative;
@@ -143,7 +142,7 @@ body {
     overflow: hidden;
     transform-style: preserve-3d;
     transition: transform 0.1s ease-out;
-    cursor: none;
+    cursor: pointer;
 }
 
 .card-content {
@@ -244,30 +243,6 @@ body {
     opacity: 1;
 }
 
-/* Custom Cursor */
-.custom-cursor {
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--primary);
-    border-radius: 50%;
-    position: fixed;
-    pointer-events: none;
-    z-index: 9999;
-    transition: all 0.1s ease;
-    mix-blend-mode: difference;
-}
-
-.cursor-trail {
-    width: 8px;
-    height: 8px;
-    background: var(--primary);
-    border-radius: 50%;
-    position: fixed;
-    pointer-events: none;
-    z-index: 9998;
-    transition: all 0.15s ease;
-}
-
 /* Footer */
 .demo-footer {
     text-align: center;
@@ -315,15 +290,6 @@ body {
 
     .spotlight-grid {
         grid-template-columns: 1fr;
-    }
-
-    body {
-        cursor: auto;
-    }
-
-    .custom-cursor,
-    .cursor-trail {
-        display: none;
     }
 }
 
