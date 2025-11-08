@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Mouse Framework Demo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="background-grid"></div>
+
+    <div class="container">
+        <header class="demo-header">
+            <h1>🎮 Interactive Mouse Framework</h1>
+            <p>Prvky reagují na pohyb myši - zkuste to!</p>
+        </header>
+
+        <section class="demo-section">
+            <h2>Magnetic Buttons</h2>
+            <p class="section-desc">Tlačítka se přitahují k myši</p>
+            <div class="button-grid">
+                <button class="magnetic-button">Stáhnout</button>
+                <button class="magnetic-button">Odeslat</button>
+                <button class="magnetic-button">Přihlásit</button>
+                <button class="magnetic-button">Registrace</button>
+                <button class="magnetic-button">Kontakt</button>
+                <button class="magnetic-button">Info</button>
+            </div>
+        </section>
+
+        <section class="demo-section">
+            <h2>Tilt Cards</h2>
+            <p class="section-desc">Karty se naklání podle pozice myši</p>
+            <div class="card-grid">
+                <div class="tilt-card">
+                    <div class="card-content">
+                        <div class="card-icon">🎨</div>
+                        <h3>Design</h3>
+                        <p>Moderní UI/UX design s 3D efekty</p>
+                    </div>
+                    <div class="card-shine"></div>
+                </div>
+
+                <div class="tilt-card">
+                    <div class="card-content">
+                        <div class="card-icon">⚡</div>
+                        <h3>Výkon</h3>
+                        <p>Optimalizováno pro plynulý běh</p>
+                    </div>
+                    <div class="card-shine"></div>
+                </div>
+
+                <div class="tilt-card">
+                    <div class="card-content">
+                        <div class="card-icon">🚀</div>
+                        <h3>Rychlost</h3>
+                        <p>Minimální latence, max zážitek</p>
+                    </div>
+                    <div class="card-shine"></div>
+                </div>
+
+                <div class="tilt-card">
+                    <div class="card-content">
+                        <div class="card-icon">💎</div>
+                        <h3>Premium</h3>
+                        <p>Kvalita na prvním místě</p>
+                    </div>
+                    <div class="card-shine"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="demo-section">
+            <h2>Follow Cursor</h2>
+            <p class="section-desc">Prvky sledují kurzor</p>
+            <div class="follow-area">
+                <div class="follower-element">👁️</div>
+                <div class="follower-element">🎯</div>
+                <div class="follower-element">🔍</div>
+            </div>
+        </section>
+
+        <section class="demo-section">
+            <h2>Repel Effect</h2>
+            <p class="section-desc">Prvky se odpuzují od myši</p>
+            <div class="repel-container">
+                <div class="repel-circle"></div>
+                <div class="repel-circle"></div>
+                <div class="repel-circle"></div>
+                <div class="repel-circle"></div>
+                <div class="repel-circle"></div>
+                <div class="repel-circle"></div>
+                <div class="repel-circle"></div>
+                <div class="repel-circle"></div>
+            </div>
+        </section>
+
+        <section class="demo-section">
+            <h2>Spotlight Effect</h2>
+            <p class="section-desc">Oblast kolem myši se rozsvítí</p>
+            <div class="spotlight-grid">
+                <div class="spotlight-item">Item 1</div>
+                <div class="spotlight-item">Item 2</div>
+                <div class="spotlight-item">Item 3</div>
+                <div class="spotlight-item">Item 4</div>
+                <div class="spotlight-item">Item 5</div>
+                <div class="spotlight-item">Item 6</div>
+                <div class="spotlight-item">Item 7</div>
+                <div class="spotlight-item">Item 8</div>
+                <div class="spotlight-item">Item 9</div>
+            </div>
+        </section>
+
+        <footer class="demo-footer">
+            <p>Interactive Mouse Framework - Demo Playground</p>
+            <a href="../index.html" class="back-link">← Zpět na hlavní stránku</a>
+        </footer>
+    </div>
+
+    <!-- Cursor follower -->
+    <div class="custom-cursor"></div>
+    <div class="cursor-trail"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
