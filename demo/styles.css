@@ -182,39 +182,6 @@ body {
     opacity: 1;
 }
 
-/* Follow Cursor */
-.follow-area {
-    height: 400px;
-    background: var(--glass);
-    backdrop-filter: blur(20px);
-    border: 2px solid var(--border);
-    border-radius: 20px;
-    position: relative;
-    overflow: hidden;
-}
-
-.follower-element {
-    position: absolute;
-    font-size: 3rem;
-    transition: all 0.2s ease-out;
-    cursor: none;
-}
-
-.follower-element:nth-child(1) {
-    top: 20%;
-    left: 20%;
-}
-
-.follower-element:nth-child(2) {
-    top: 50%;
-    left: 50%;
-}
-
-.follower-element:nth-child(3) {
-    top: 70%;
-    left: 70%;
-}
-
 /* Repel Effect */
 .repel-container {
     height: 400px;

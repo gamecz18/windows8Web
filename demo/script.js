@@ -107,36 +107,6 @@ function setupTiltCards() {
     });
 }
 
-// Follow Cursor Elements
-function setupFollowCursor() {
-    const area = document.querySelector('.follow-area');
-    const followers = document.querySelectorAll('.follower-element');
-
-    if (!area) return;
-
-    area.addEventListener('mousemove', (e) => {
-        const rect = area.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        followers.forEach((follower, index) => {
-            const delay = (index + 1) * 0.05;
-            const speed = 0.1 - (index * 0.02);
-
-            const currentX = parseFloat(follower.style.left) || (index + 1) * 20;
-            const currentY = parseFloat(follower.style.top) || (index + 1) * 20;
-
-            const newX = currentX + (x - currentX - 30) * speed;
-            const newY = currentY + (y - currentY - 30) * speed;
-
-            setTimeout(() => {
-                follower.style.left = newX + 'px';
-                follower.style.top = newY + 'px';
-            }, delay * 1000);
-        });
-    });
-}
-
 // Repel Effect
 function setupRepelEffect() {
     const container = document.querySelector('.repel-container');
@@ -285,7 +255,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setupCustomCursor();
     setupMagneticButtons();
     setupTiltCards();
-    setupFollowCursor();
     setupRepelEffect();
     setupSpotlightEffect();
     setupParallaxBackground();
