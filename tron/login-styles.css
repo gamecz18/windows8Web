@@ -806,30 +806,27 @@ body {
     }
 }
 
-/* Laser Beam Animation */
-.laser-beam {
+/* Laser Beam Animation - Tracing Mode */
+.laser-beam.tracing {
     position: fixed;
-    width: 6px;
-    height: 100vh;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
     display: none;
     pointer-events: none;
     z-index: 1000;
-    transform-origin: top center;
-    background: linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0) 0%,
-        rgba(255, 59, 59, 0.3) 20%,
-        rgba(255, 27, 68, 0.9) 50%,
-        rgba(255, 59, 59, 1) 80%,
-        rgba(255, 255, 255, 1) 100%
+    background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 1) 0%,
+        rgba(255, 59, 59, 1) 40%,
+        rgba(255, 27, 68, 0.5) 100%
     );
     box-shadow:
-        0 0 10px rgba(255, 59, 59, 1),
-        0 0 20px rgba(255, 27, 68, 0.8),
-        0 0 40px rgba(255, 59, 59, 0.6),
-        0 0 80px rgba(255, 27, 68, 0.4);
-    filter: blur(1px);
-    opacity: 0.9;
+        0 0 10px rgba(255, 255, 255, 1),
+        0 0 20px rgba(255, 59, 59, 1),
+        0 0 30px rgba(255, 27, 68, 0.8),
+        0 0 40px rgba(255, 59, 59, 0.6);
+    opacity: 1;
     transition: opacity 0.5s ease-out;
 }
 
@@ -962,41 +959,34 @@ body {
     }
 }
 
-/* Laser Cut Line Visualization */
-.cut-line {
+/* Cut Path - Shows where laser has cut */
+.cut-path {
     position: fixed;
-    height: 3px;
-    background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(255, 255, 255, 1) 20%,
-        rgba(255, 59, 59, 1) 50%,
-        rgba(255, 255, 255, 1) 80%,
-        transparent 100%
-    );
-    box-shadow:
-        0 0 20px rgba(255, 255, 255, 1),
-        0 0 40px rgba(255, 59, 59, 1),
-        0 0 60px rgba(255, 27, 68, 0.8);
     pointer-events: none;
-    z-index: 1001;
-    opacity: 0;
-    transition: opacity 0.1s ease-out;
+    z-index: 998;
+    border: 2px solid transparent;
+    border-image: linear-gradient(
+        90deg,
+        rgba(255, 59, 59, 1) 0%,
+        rgba(255, 255, 255, 1) var(--progress, 0%),
+        transparent var(--progress, 0%)
+    ) 1;
+    box-shadow:
+        0 0 10px rgba(255, 59, 59, 0.8),
+        0 0 20px rgba(255, 27, 68, 0.6),
+        inset 0 0 10px rgba(255, 59, 59, 0.4);
+    animation: cutPathGlow 0.5s ease-out;
 }
 
-.cut-line.active {
-    opacity: 1;
-    animation: cutLineFlash 0.3s ease-out;
-}
-
-@keyframes cutLineFlash {
-    0%, 100% {
-        filter: brightness(2);
-        transform: scaleY(1);
+@keyframes cutPathGlow {
+    0% {
+        filter: brightness(3);
+        box-shadow:
+            0 0 30px rgba(255, 255, 255, 1),
+            0 0 50px rgba(255, 59, 59, 1);
     }
-    50% {
-        filter: brightness(5);
-        transform: scaleY(2);
+    100% {
+        filter: brightness(1);
     }
 }
 

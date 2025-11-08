@@ -100,9 +100,9 @@ function engraveUsername(username) {
         return span;
     });
 
-    // Create laser beam element
+    // Create laser beam element (smaller, for tracing)
     const laserBeam = document.createElement('div');
-    laserBeam.className = 'laser-beam';
+    laserBeam.className = 'laser-beam tracing';
     document.body.appendChild(laserBeam);
 
     // Create laser impact point
@@ -115,199 +115,188 @@ function engraveUsername(username) {
         engravedUsername.classList.add('active');
     }, 100);
 
-    // Animate laser across the text
-    const duration = 2500;
+    // Start tracing letters one by one
+    let currentLetterIndex = 0;
     const startDelay = 300;
 
     setTimeout(() => {
-        // Start laser from left side
         laserBeam.style.display = 'block';
         laserImpact.style.display = 'block';
 
-        const textRect = engravedUsername.getBoundingClientRect();
-        const startX = textRect.left - 200;
-        const endX = textRect.right + 200;
-        const centerY = textRect.top + textRect.height / 2;
-
-        let progress = 0;
-        const animationDuration = duration;
-        const startTime = Date.now();
-
-        function animateLaser() {
-            const elapsed = Date.now() - startTime;
-            progress = Math.min(elapsed / animationDuration, 1);
-
-            // Calculate laser position
-            const currentX = startX + (endX - startX) * progress;
-
-            // Update laser beam position
-            laserBeam.style.left = currentX + 'px';
-            laserBeam.style.top = (centerY - 300) + 'px';
-            laserBeam.style.bottom = '0';
-
-            // Update impact point
-            laserImpact.style.left = currentX + 'px';
-            laserImpact.style.top = centerY + 'px';
-
-            // Cut letters as laser passes over them
-            letters.forEach((letter, index) => {
-                const letterRect = letter.getBoundingClientRect();
-                const letterCenter = letterRect.left + letterRect.width / 2;
-
-                if (currentX >= letterCenter - 20 && letter.style.opacity === '0') {
-                    // Burn in the letter
-                    letter.style.opacity = '1';
-                    letter.classList.add('burning');
-
-                    // Create falling fragment from center of letter
-                    createFallingFragment(letterRect, letter.textContent);
-
-                    // Create sparks at letter position
-                    createSparks(letterCenter, centerY);
-
-                    setTimeout(() => {
-                        letter.classList.remove('burning');
-                        letter.classList.add('burned');
-                    }, 200);
-                }
-            });
-
-            if (progress < 1) {
-                requestAnimationFrame(animateLaser);
-            } else {
-                // Laser finished, fade it out
+        function traceNextLetter() {
+            if (currentLetterIndex >= letters.length) {
+                // All letters traced, clean up
                 laserBeam.style.opacity = '0';
                 laserImpact.style.opacity = '0';
-
                 setTimeout(() => {
                     laserBeam.remove();
                     laserImpact.remove();
                 }, 500);
+                return;
             }
+
+            const letter = letters[currentLetterIndex];
+            const letterRect = letter.getBoundingClientRect();
+
+            // Make letter visible
+            letter.style.opacity = '1';
+            letter.classList.add('burning');
+
+            // Trace around this letter
+            traceLetter(letterRect, letter, laserBeam, laserImpact, () => {
+                // When done tracing, drop the letter and move to next
+                letter.classList.remove('burning');
+                letter.classList.add('burned');
+
+                createFallingFragment(letterRect, letter.textContent);
+
+                currentLetterIndex++;
+                setTimeout(traceNextLetter, 100); // Small delay before next letter
+            });
         }
 
-        animateLaser();
-
-        // Start physics update loop
+        traceNextLetter();
         updatePhysicsFragments();
     }, startDelay);
 }
 
-// Create a fragment that falls with physics - laser cuts letter into TOP and BOTTOM halves
+// Trace laser around a single letter's outline
+function traceLetter(rect, letterElement, laserBeam, laserImpact, onComplete) {
+    const padding = 5; // Small padding around letter
+    const speed = 600; // pixels per second
+
+    // Create cut path visualization
+    const cutPath = document.createElement('div');
+    cutPath.className = 'cut-path';
+    cutPath.style.left = (rect.left - padding) + 'px';
+    cutPath.style.top = (rect.top - padding) + 'px';
+    cutPath.style.width = (rect.width + padding * 2) + 'px';
+    cutPath.style.height = (rect.height + padding * 2) + 'px';
+    document.body.appendChild(cutPath);
+
+    // Define the path points (rectangle around letter)
+    const path = [
+        { x: rect.left - padding, y: rect.top - padding, edge: 'top' },           // Top-left corner
+        { x: rect.right + padding, y: rect.top - padding, edge: 'top' },          // Top-right corner
+        { x: rect.right + padding, y: rect.bottom + padding, edge: 'right' },     // Bottom-right corner
+        { x: rect.left - padding, y: rect.bottom + padding, edge: 'bottom' },     // Bottom-left corner
+        { x: rect.left - padding, y: rect.top - padding, edge: 'left' }           // Back to start
+    ];
+
+    let pathIndex = 0;
+    let progress = 0;
+    const startTime = Date.now();
+
+    function animateTrace() {
+        if (pathIndex >= path.length - 1) {
+            // Finished tracing
+            setTimeout(() => {
+                cutPath.remove();
+            }, 300);
+            onComplete();
+            return;
+        }
+
+        const start = path[pathIndex];
+        const end = path[pathIndex + 1];
+        const distance = Math.hypot(end.x - start.x, end.y - start.y);
+        const duration = (distance / speed) * 1000;
+
+        const elapsed = Date.now() - startTime - (pathIndex * duration);
+        progress = Math.min(elapsed / duration, 1);
+
+        // Current position along this segment
+        const currentX = start.x + (end.x - start.x) * progress;
+        const currentY = start.y + (end.y - start.y) * progress;
+
+        // Update laser position
+        laserBeam.style.left = currentX + 'px';
+        laserBeam.style.top = currentY + 'px';
+
+        // Update impact point
+        laserImpact.style.left = currentX + 'px';
+        laserImpact.style.top = currentY + 'px';
+
+        // Show cut path progress
+        const edgeProgress = ((pathIndex + progress) / (path.length - 1)) * 100;
+        cutPath.style.setProperty('--progress', `${edgeProgress}%`);
+        cutPath.classList.add('edge-' + start.edge);
+
+        // Create sparks along the path
+        if (Math.random() > 0.7) {
+            createSparks(currentX, currentY, 3);
+        }
+
+        if (progress >= 1) {
+            pathIndex++;
+            progress = 0;
+        }
+
+        if (pathIndex < path.length - 1) {
+            requestAnimationFrame(animateTrace);
+        } else {
+            onComplete();
+            setTimeout(() => {
+                cutPath.remove();
+            }, 300);
+        }
+    }
+
+    animateTrace();
+}
+
+// Create a fragment that falls with physics - whole letter drops
 function createFallingFragment(letterRect, char) {
     const { Bodies, World } = Matter;
 
     const centerX = letterRect.left + letterRect.width / 2;
     const centerY = letterRect.top + letterRect.height / 2;
 
-    // Create cut line visualization
-    createCutLine(letterRect.left, centerY, letterRect.right, centerY);
+    // Create whole letter fragment
+    const fragment = document.createElement('div');
+    fragment.className = 'falling-fragment whole-letter';
+    fragment.textContent = char;
+    fragment.style.left = letterRect.left + 'px';
+    fragment.style.top = letterRect.top + 'px';
+    fragment.style.width = letterRect.width + 'px';
+    fragment.style.height = letterRect.height + 'px';
+    document.body.appendChild(fragment);
 
-    // Create TOP HALF of the letter
-    const topHalf = document.createElement('div');
-    topHalf.className = 'falling-fragment top-half';
-    topHalf.textContent = char;
-    topHalf.style.left = letterRect.left + 'px';
-    topHalf.style.top = letterRect.top + 'px';
-    topHalf.style.width = letterRect.width + 'px';
-    topHalf.style.height = letterRect.height + 'px';
-    topHalf.style.clipPath = 'inset(0 0 50% 0)'; // Show only top half
-    document.body.appendChild(topHalf);
-
-    // Create BOTTOM HALF of the letter
-    const bottomHalf = document.createElement('div');
-    bottomHalf.className = 'falling-fragment bottom-half';
-    bottomHalf.textContent = char;
-    bottomHalf.style.left = letterRect.left + 'px';
-    bottomHalf.style.top = letterRect.top + 'px';
-    bottomHalf.style.width = letterRect.width + 'px';
-    bottomHalf.style.height = letterRect.height + 'px';
-    bottomHalf.style.clipPath = 'inset(50% 0 0 0)'; // Show only bottom half
-    document.body.appendChild(bottomHalf);
-
-    // Physics for TOP HALF - flies upward and to the left
-    const topBody = Bodies.rectangle(
+    // Physics for whole letter - ejected with random force
+    const letterBody = Bodies.rectangle(
         centerX,
-        letterRect.top + letterRect.height / 4,
+        centerY,
         letterRect.width,
-        letterRect.height / 2,
+        letterRect.height,
         {
-            restitution: 0.5,
-            friction: 0.4,
-            density: 0.003,
-            angle: (Math.random() - 0.5) * 0.5,
-            angularVelocity: (Math.random() - 1) * 0.4, // Spin counter-clockwise
+            restitution: 0.6,
+            friction: 0.3,
+            density: 0.004,
+            angle: (Math.random() - 0.5) * 0.3,
+            angularVelocity: (Math.random() - 0.5) * 0.6,
         }
     );
 
-    // Apply strong upward and leftward force to top half
-    Matter.Body.applyForce(topBody, topBody.position, {
-        x: -(Math.random() * 0.15 + 0.1),
-        y: -(Math.random() * 0.2 + 0.15)
+    // Apply ejection force (slight upward and random horizontal)
+    Matter.Body.applyForce(letterBody, letterBody.position, {
+        x: (Math.random() - 0.5) * 0.2,
+        y: -0.1
     });
 
-    World.add(physicsWorld, topBody);
+    World.add(physicsWorld, letterBody);
 
-    // Physics for BOTTOM HALF - flies downward and to the right
-    const bottomBody = Bodies.rectangle(
-        centerX,
-        letterRect.top + letterRect.height * 3 / 4,
-        letterRect.width,
-        letterRect.height / 2,
-        {
-            restitution: 0.5,
-            friction: 0.4,
-            density: 0.003,
-            angle: (Math.random() - 0.5) * 0.5,
-            angularVelocity: Math.random() * 0.4, // Spin clockwise
-        }
-    );
-
-    // Apply strong downward and rightward force to bottom half
-    Matter.Body.applyForce(bottomBody, bottomBody.position, {
-        x: Math.random() * 0.15 + 0.1,
-        y: Math.random() * 0.1 + 0.05
-    });
-
-    World.add(physicsWorld, bottomBody);
-
-    // Store both fragments
+    // Store fragment
     fallingFragments.push({
-        element: topHalf,
-        body: topBody,
-        createdAt: Date.now(),
-        isTopHalf: true
+        element: fragment,
+        body: letterBody,
+        createdAt: Date.now()
     });
 
-    fallingFragments.push({
-        element: bottomHalf,
-        body: bottomBody,
-        createdAt: Date.now(),
-        isBottomHalf: true
-    });
-
-    // Create intense sparks at cut point
-    createSparks(centerX, centerY, 30);
-}
-
-// Visualize the laser cut line
-function createCutLine(x1, y, x2, yEnd) {
-    const cutLine = document.createElement('div');
-    cutLine.className = 'cut-line';
-    cutLine.style.left = x1 + 'px';
-    cutLine.style.top = y + 'px';
-    cutLine.style.width = (x2 - x1) + 'px';
-    document.body.appendChild(cutLine);
-
-    // Animate cut line
-    setTimeout(() => {
-        cutLine.classList.add('active');
-    }, 10);
-
-    // Remove after animation
-    setTimeout(() => {
-        cutLine.remove();
-    }, 500);
+    // Create sparks around the letter outline
+    createSparks(letterRect.left, letterRect.top, 5);
+    createSparks(letterRect.right, letterRect.top, 5);
+    createSparks(letterRect.right, letterRect.bottom, 5);
+    createSparks(letterRect.left, letterRect.bottom, 5);
 }
 
 // Update physics fragments positions
