@@ -961,3 +961,92 @@ body {
         filter: brightness(0.5);
     }
 }
+
+/* Falling Fragment with Physics */
+.falling-fragment {
+    position: fixed;
+    pointer-events: none;
+    z-index: 997;
+    font-size: 15vw;
+    font-weight: 900;
+    color: #0a0005;
+    text-shadow:
+        /* Glowing hot edges - freshly cut */
+        0 0 30px rgba(255, 255, 255, 0.9),
+        0 0 60px rgba(255, 59, 59, 1),
+        0 0 90px rgba(255, 27, 68, 0.8),
+        0 0 120px rgba(255, 59, 59, 0.6),
+        /* Charred appearance */
+        inset 0 0 30px rgba(0, 0, 0, 0.9),
+        /* Depth shadow */
+        0 6px 15px rgba(0, 0, 0, 0.9),
+        0 12px 30px rgba(0, 0, 0, 0.7);
+    -webkit-text-stroke: 2px rgba(139, 0, 0, 0.6);
+    background: radial-gradient(
+        ellipse at center,
+        rgba(139, 0, 0, 0.9) 0%,
+        rgba(60, 0, 0, 0.7) 30%,
+        rgba(20, 0, 0, 0.5) 60%,
+        transparent 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform-origin: center center;
+    filter: brightness(1.2);
+    animation: fragmentGlow 0.5s ease-out;
+}
+
+@keyframes fragmentGlow {
+    0% {
+        filter: brightness(3) blur(5px);
+        text-shadow:
+            0 0 100px rgba(255, 255, 255, 1),
+            0 0 80px rgba(255, 59, 59, 1),
+            0 0 60px rgba(255, 27, 68, 1);
+    }
+    100% {
+        filter: brightness(1.2) blur(0px);
+    }
+}
+
+/* Fragment Shards (smaller pieces after impact) */
+.fragment-shard {
+    position: fixed;
+    pointer-events: none;
+    z-index: 996;
+    background: linear-gradient(
+        135deg,
+        rgba(139, 0, 0, 0.9) 0%,
+        rgba(60, 0, 0, 0.7) 50%,
+        rgba(20, 0, 0, 0.5) 100%
+    );
+    border: 1px solid rgba(255, 59, 59, 0.6);
+    box-shadow:
+        0 0 15px rgba(255, 59, 59, 0.8),
+        0 0 30px rgba(255, 27, 68, 0.6),
+        inset 0 0 10px rgba(0, 0, 0, 0.9);
+    transform-origin: center center;
+    filter: brightness(1.1);
+}
+
+/* Add smoke trail to falling fragments */
+.falling-fragment::after,
+.fragment-shard::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle,
+        rgba(100, 0, 0, 0.3) 0%,
+        transparent 50%
+    );
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    opacity: 0.5;
+}

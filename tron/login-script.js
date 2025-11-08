@@ -69,7 +69,24 @@ async function performLogin(username) {
     loginButton.disabled = false;
 }
 
+// Matter.js Physics Setup
+let physicsEngine, physicsWorld, physicsRender;
+const fallingFragments = [];
+
+function setupPhysics() {
+    const { Engine, World, Bodies, Render, Runner } = Matter;
+
+    physicsEngine = Engine.create();
+    physicsWorld = physicsEngine.world;
+    physicsWorld.gravity.y = 2;
+
+    // Create invisible renderer (we'll render fragments ourselves)
+    Runner.run(physicsEngine);
+}
+
 function engraveUsername(username) {
+    setupPhysics();
+
     const text = username.toUpperCase();
 
     // Split text into individual letters
@@ -99,7 +116,7 @@ function engraveUsername(username) {
     }, 100);
 
     // Animate laser across the text
-    const duration = 2500; // Total animation duration
+    const duration = 2500;
     const startDelay = 300;
 
     setTimeout(() => {
@@ -132,7 +149,7 @@ function engraveUsername(username) {
             laserImpact.style.left = currentX + 'px';
             laserImpact.style.top = centerY + 'px';
 
-            // Reveal letters as laser passes over them
+            // Cut letters as laser passes over them
             letters.forEach((letter, index) => {
                 const letterRect = letter.getBoundingClientRect();
                 const letterCenter = letterRect.left + letterRect.width / 2;
@@ -141,6 +158,9 @@ function engraveUsername(username) {
                     // Burn in the letter
                     letter.style.opacity = '1';
                     letter.classList.add('burning');
+
+                    // Create falling fragment from center of letter
+                    createFallingFragment(letterRect, letter.textContent);
 
                     // Create sparks at letter position
                     createSparks(letterCenter, centerY);
@@ -167,12 +187,149 @@ function engraveUsername(username) {
         }
 
         animateLaser();
+
+        // Start physics update loop
+        updatePhysicsFragments();
     }, startDelay);
 }
 
+// Create a fragment that falls with physics
+function createFallingFragment(letterRect, char) {
+    const { Bodies, World } = Matter;
+
+    // Create fragment element
+    const fragment = document.createElement('div');
+    fragment.className = 'falling-fragment';
+    fragment.textContent = char;
+    fragment.style.left = letterRect.left + 'px';
+    fragment.style.top = letterRect.top + 'px';
+    fragment.style.width = letterRect.width + 'px';
+    fragment.style.height = letterRect.height + 'px';
+    document.body.appendChild(fragment);
+
+    // Create Matter.js body
+    const fragmentBody = Bodies.rectangle(
+        letterRect.left + letterRect.width / 2,
+        letterRect.top + letterRect.height / 2,
+        letterRect.width,
+        letterRect.height,
+        {
+            restitution: 0.3,
+            friction: 0.5,
+            density: 0.002,
+            angle: (Math.random() - 0.5) * 0.3,
+            angularVelocity: (Math.random() - 0.5) * 0.2,
+            force: {
+                x: (Math.random() - 0.5) * 0.05,
+                y: -0.02
+            }
+        }
+    );
+
+    World.add(physicsWorld, fragmentBody);
+
+    // Store fragment data
+    fallingFragments.push({
+        element: fragment,
+        body: fragmentBody,
+        createdAt: Date.now()
+    });
+
+    // Create more intense sparks for ejection
+    const centerX = letterRect.left + letterRect.width / 2;
+    const centerY = letterRect.top + letterRect.height / 2;
+    createSparks(centerX, centerY, 20);
+}
+
+// Update physics fragments positions
+function updatePhysicsFragments() {
+    const currentTime = Date.now();
+
+    fallingFragments.forEach((frag, index) => {
+        const pos = frag.body.position;
+        const angle = frag.body.angle;
+
+        // Update DOM element position
+        frag.element.style.transform = `translate(${pos.x - frag.body.bounds.max.x + frag.body.bounds.min.x}px, ${pos.y - frag.body.bounds.max.y + frag.body.bounds.min.y}px) rotate(${angle}rad)`;
+
+        // Add fade out effect
+        const age = currentTime - frag.createdAt;
+        if (age > 2000) {
+            const opacity = Math.max(0, 1 - (age - 2000) / 1000);
+            frag.element.style.opacity = opacity;
+
+            if (opacity <= 0) {
+                frag.element.remove();
+                World.remove(physicsWorld, frag.body);
+                fallingFragments.splice(index, 1);
+            }
+        }
+
+        // Check if fragment hits ground and shatter it
+        if (pos.y > window.innerHeight - 50 && !frag.shattered) {
+            frag.shattered = true;
+            shatterFragment(frag);
+        }
+    });
+
+    if (fallingFragments.length > 0) {
+        requestAnimationFrame(updatePhysicsFragments);
+    }
+}
+
+// Shatter fragment into smaller pieces on impact
+function shatterFragment(frag) {
+    const { Bodies, World } = Matter;
+    const pos = frag.body.position;
+    const rect = frag.element.getBoundingClientRect();
+
+    // Create 3-5 smaller shards
+    const shardCount = Math.floor(Math.random() * 3) + 3;
+
+    for (let i = 0; i < shardCount; i++) {
+        const shard = document.createElement('div');
+        shard.className = 'fragment-shard';
+        shard.style.left = rect.left + 'px';
+        shard.style.top = rect.top + 'px';
+        shard.style.width = (rect.width / 2) + 'px';
+        shard.style.height = (rect.height / 2) + 'px';
+        document.body.appendChild(shard);
+
+        const shardBody = Bodies.rectangle(
+            pos.x + (Math.random() - 0.5) * 20,
+            pos.y,
+            rect.width / 2,
+            rect.height / 2,
+            {
+                restitution: 0.4,
+                friction: 0.6,
+                density: 0.001,
+                angle: Math.random() * Math.PI * 2,
+                angularVelocity: (Math.random() - 0.5) * 0.3,
+                force: {
+                    x: (Math.random() - 0.5) * 0.03,
+                    y: -0.01
+                }
+            }
+        );
+
+        World.add(physicsWorld, shardBody);
+
+        fallingFragments.push({
+            element: shard,
+            body: shardBody,
+            createdAt: Date.now(),
+            shattered: true
+        });
+    }
+
+    // Create impact sparks
+    createSparks(pos.x, pos.y, 15);
+}
+
 // Create spark particles at laser impact
-function createSparks(x, y) {
-    const sparkCount = 8;
+function createSparks(x, y, count = 8) {
+    const sparkCount = count;
 
     for (let i = 0; i < sparkCount; i++) {
         const spark = document.createElement('div');
