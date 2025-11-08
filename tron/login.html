@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tron Login - Access Grid</title>
+    <link rel="stylesheet" href="login-styles.css">
+</head>
+<body>
+    <div class="grid-background"></div>
+    <div class="scanlines"></div>
+
+    <!-- Engraved username background (hidden initially) -->
+    <div class="engraved-username" id="engravedUsername"></div>
+
+    <div class="login-container" id="loginContainer">
+        <div class="login-box">
+            <div class="login-header">
+                <div class="logo-login">
+                    <svg width="60" height="60" viewBox="0 0 60 60">
+                        <polygon points="30,5 55,20 55,40 30,55 5,40 5,20" fill="none" stroke="currentColor" stroke-width="3"/>
+                        <polygon points="30,20 40,25 40,35 30,40 20,35 20,25" fill="currentColor"/>
+                    </svg>
+                </div>
+                <h1 class="glitch" data-text="ACCESS GRID">ACCESS GRID</h1>
+                <p class="subtitle">AUTHORIZATION REQUIRED</p>
+            </div>
+
+            <form class="login-form" id="loginForm">
+                <div class="input-group">
+                    <label for="username">USER IDENTITY</label>
+                    <div class="input-wrapper">
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="Enter username"
+                            autocomplete="off"
+                            required
+                        >
+                        <div class="input-glow"></div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">ACCESS CODE</label>
+                    <div class="input-wrapper">
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter password"
+                            autocomplete="off"
+                            required
+                        >
+                        <div class="input-glow"></div>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-button">
+                    <span class="button-text">INITIATE ACCESS</span>
+                    <div class="button-glow"></div>
+                </button>
+
+                <div class="login-status" id="loginStatus"></div>
+            </form>
+
+            <div class="login-footer">
+                <div class="status-line">
+                    <span class="status-dot"></span>
+                    <span>SYSTEM ONLINE</span>
+                </div>
+                <a href="index.html" class="back-link-login">← EXIT TO GRID</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success overlay -->
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-content">
+            <div class="success-icon">
+                <svg width="100" height="100" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="3"/>
+                    <path d="M30 50 L45 65 L70 35" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h2 class="success-message">ACCESS GRANTED</h2>
+            <p class="success-user" id="successUser"></p>
+        </div>
+    </div>
+
+    <script src="login-script.js"></script>
+</body>
+</html>
