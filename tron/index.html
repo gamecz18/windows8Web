@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tron Legacy Interface</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="grid-background"></div>
+    <div class="scanlines"></div>
+
+    <div class="container">
+        <header class="tron-header">
+            <div class="logo">
+                <svg width="50" height="50" viewBox="0 0 50 50">
+                    <polygon points="25,5 45,15 45,35 25,45 5,35 5,15" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <polygon points="25,15 35,20 35,30 25,35 15,30 15,20" fill="currentColor"/>
+                </svg>
+                <span class="glitch" data-text="TRON">TRON</span>
+                <span class="version">v2.0</span>
+            </div>
+            <nav class="main-nav">
+                <a href="#" class="nav-link">SYSTEM</a>
+                <a href="#" class="nav-link">PROGRAMS</a>
+                <a href="#" class="nav-link">GRID</a>
+                <a href="#" class="nav-link">ACCESS</a>
+            </nav>
+            <div class="user-status">
+                <div class="status-indicator"></div>
+                <span>ONLINE</span>
+            </div>
+        </header>
+
+        <main class="grid-container">
+            <div class="grid-item large" data-tilt>
+                <div class="item-border"></div>
+                <div class="item-content">
+                    <div class="icon-hex">
+                        <svg viewBox="0 0 100 100">
+                            <path d="M50 10 L80 30 L80 70 L50 90 L20 70 L20 30 Z" fill="none" stroke="currentColor" stroke-width="3"/>
+                            <circle cx="50" cy="50" r="15" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h2>CORE SYSTEM</h2>
+                    <p class="desc">Main processing unit</p>
+                    <div class="status-bar">
+                        <div class="status-fill" style="width: 85%"></div>
+                    </div>
+                    <div class="metric">85% ACTIVE</div>
+                </div>
+            </div>
+
+            <div class="grid-item medium" data-tilt>
+                <div class="item-border"></div>
+                <div class="item-content">
+                    <div class="icon-hex">
+                        <svg viewBox="0 0 100 100">
+                            <polygon points="50,20 70,35 70,65 50,80 30,65 30,35" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <line x1="50" y1="50" x2="50" y2="30" stroke="currentColor" stroke-width="2"/>
+                            <line x1="50" y1="50" x2="65" y2="60" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h2>NETWORK</h2>
+                    <p class="desc">Connection status</p>
+                    <div class="metric">24 NODES</div>
+                </div>
+            </div>
+
+            <div class="grid-item small" data-tilt>
+                <div class="item-border"></div>
+                <div class="item-content">
+                    <div class="icon-hex small">
+                        <svg viewBox="0 0 100 100">
+                            <rect x="30" y="30" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <path d="M40 40 L60 60 M60 40 L40 60" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h2>SECURITY</h2>
+                </div>
+            </div>
+
+            <div class="grid-item small" data-tilt>
+                <div class="item-border"></div>
+                <div class="item-content">
+                    <div class="icon-hex small">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="35" r="12" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <path d="M30 70 Q30 50 50 50 T70 70" fill="none" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h2>USER</h2>
+                </div>
+            </div>
+
+            <div class="grid-item medium" data-tilt>
+                <div class="item-border"></div>
+                <div class="item-content">
+                    <div class="icon-hex">
+                        <svg viewBox="0 0 100 100">
+                            <path d="M30 30 L50 20 L70 30 L70 70 L30 70 Z" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <line x1="40" y1="40" x2="40" y2="65" stroke="currentColor" stroke-width="2"/>
+                            <line x1="60" y1="40" x2="60" y2="65" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h2>DATA ARCHIVE</h2>
+                    <div class="metric">1.2 TB</div>
+                </div>
+            </div>
+
+            <div class="grid-item large" data-tilt>
+                <div class="item-border"></div>
+                <div class="item-content">
+                    <div class="icon-hex">
+                        <svg viewBox="0 0 100 100">
+                            <rect x="25" y="35" width="50" height="30" rx="3" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <path d="M25 45 L50 55 L75 45" fill="none" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h2>MESSAGES</h2>
+                    <p class="desc">Incoming transmissions</p>
+                    <div class="notification-count">
+                        <span class="count">7</span>
+                        <span class="label">NEW</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-item small" data-tilt>
+                <div class="item-border"></div>
+                <div class="item-content">
+                    <div class="icon-hex small">
+                        <svg viewBox="0 0 100 100">
+                            <path d="M30 40 L30 25 Q30 20 35 20 L65 20 Q70 20 70 25 L70 40" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <rect x="35" y="45" width="30" height="35" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h2>STORAGE</h2>
+                </div>
+            </div>
+
+            <div class="grid-item medium" data-tilt>
+                <div class="item-border"></div>
+                <div class="item-content">
+                    <div class="icon-hex">
+                        <svg viewBox="0 0 100 100">
+                            <rect x="20" y="30" width="60" height="40" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <line x1="30" y1="45" x2="30" y2="60" stroke="currentColor" stroke-width="2"/>
+                            <line x1="40" y1="40" x2="40" y2="60" stroke="currentColor" stroke-width="2"/>
+                            <line x1="50" y1="50" x2="50" y2="60" stroke="currentColor" stroke-width="2"/>
+                            <line x1="60" y1="42" x2="60" y2="60" stroke="currentColor" stroke-width="2"/>
+                            <line x1="70" y1="48" x2="70" y2="60" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h2>ANALYTICS</h2>
+                    <div class="metric">↑ 156%</div>
+                </div>
+            </div>
+
+            <div class="grid-item small" data-tilt>
+                <div class="item-border"></div>
+                <div class="item-content">
+                    <div class="icon-hex small">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="25" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <line x1="50" y1="30" x2="50" y2="50" stroke="currentColor" stroke-width="2"/>
+                            <line x1="50" y1="50" x2="65" y2="65" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h2>CLOCK</h2>
+                </div>
+            </div>
+
+            <div class="grid-item medium" data-tilt>
+                <div class="item-border"></div>
+                <div class="item-content">
+                    <div class="icon-hex">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="35" cy="35" r="8" fill="currentColor"/>
+                            <circle cx="65" cy="35" r="8" fill="currentColor"/>
+                            <path d="M25 65 L25 55 Q25 45 35 45 L65 45 Q75 45 75 55 L75 65" fill="none" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h2>CONTACTS</h2>
+                    <div class="notification-count">
+                        <span class="count">3</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-item small" data-tilt>
+                <div class="item-border"></div>
+                <div class="item-content">
+                    <div class="icon-hex small">
+                        <svg viewBox="0 0 100 100">
+                            <path d="M40 35 L40 20 Q40 15 45 15 L55 15 Q60 15 60 20 L60 30 L65 35 L35 35 Z" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <line x1="50" y1="50" x2="50" y2="70" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="50" cy="75" r="5" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h2>ALERTS</h2>
+                </div>
+            </div>
+        </main>
+
+        <footer class="tron-footer">
+            <div class="footer-content">
+                <div class="system-info">
+                    <div class="info-block">
+                        <span class="label">SYSTEM TIME</span>
+                        <span class="value" id="time">00:00:00</span>
+                    </div>
+                    <div class="info-block">
+                        <span class="label">UPTIME</span>
+                        <span class="value">99.8%</span>
+                    </div>
+                    <div class="info-block">
+                        <span class="label">STATUS</span>
+                        <span class="value status-ok">OPERATIONAL</span>
+                    </div>
+                </div>
+                <a href="../index.html" class="back-link">
+                    <span>← EXIT GRID</span>
+                </a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
