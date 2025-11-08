@@ -5,16 +5,19 @@
 }
 
 :root {
-    /* Tron Legacy Colors */
-    --tron-cyan: #00d9ff;
-    --tron-blue: #0ff;
-    --tron-dark: #0a0e27;
-    --tron-darker: #050714;
-    --tron-glow: #00d9ff;
+    /* Tron Legacy Colors - Enhanced */
+    --tron-cyan: #00e5ff;
+    --tron-blue: #0af;
+    --tron-dark: #000000;
+    --tron-darker: #000000;
+    --tron-black-glossy: #0a0a0f;
+    --tron-glow: #00e5ff;
     --tron-orange: #ff6c00;
-    --grid-color: rgba(0, 217, 255, 0.1);
-    --text-primary: #00d9ff;
-    --text-secondary: rgba(0, 217, 255, 0.7);
+    --grid-color: rgba(0, 229, 255, 0.15);
+    --text-primary: #00e5ff;
+    --text-secondary: rgba(0, 229, 255, 0.8);
+    --white-highlight: rgba(255, 255, 255, 0.9);
+    --glass-shine: rgba(255, 255, 255, 0.15);
 }
 
 @font-face {
@@ -24,13 +27,39 @@
 
 body {
     font-family: 'Orbitron', 'Rajdhani', 'Exo 2', 'Arial', sans-serif;
-    background: var(--tron-darker);
+    background: #000000;
     color: var(--text-primary);
     min-height: 100vh;
     overflow-x: hidden;
     position: relative;
     text-transform: uppercase;
     letter-spacing: 2px;
+}
+
+/* Glossy black overlay */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        linear-gradient(180deg, rgba(0, 229, 255, 0.05) 0%, transparent 50%, rgba(0, 229, 255, 0.05) 100%);
+    pointer-events: none;
+    z-index: 1;
 }
 
 /* Grid Background */
@@ -94,6 +123,8 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    position: relative;
+    z-index: 2;
 }
 
 /* Header */
@@ -102,34 +133,41 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 25px 40px;
-    background: rgba(0, 217, 255, 0.03);
-    border: 2px solid var(--tron-cyan);
+    background:
+        linear-gradient(180deg, rgba(10, 10, 15, 0.9) 0%, rgba(0, 0, 0, 0.95) 100%);
+    border: 3px solid var(--tron-cyan);
     border-radius: 0;
     margin-bottom: 40px;
     position: relative;
     box-shadow:
-        0 0 20px rgba(0, 217, 255, 0.3),
-        inset 0 0 20px rgba(0, 217, 255, 0.05);
+        0 0 30px rgba(0, 229, 255, 0.6),
+        0 0 60px rgba(0, 229, 255, 0.3),
+        inset 0 0 30px rgba(0, 229, 255, 0.1),
+        inset 0 2px 0 rgba(255, 255, 255, 0.2);
 }
 
 .tron-header::before,
 .tron-header::after {
     content: '';
     position: absolute;
-    width: 10px;
-    height: 10px;
-    background: var(--tron-cyan);
-    box-shadow: 0 0 10px var(--tron-cyan);
+    width: 15px;
+    height: 15px;
+    background:
+        radial-gradient(circle, var(--white-highlight) 0%, var(--tron-cyan) 100%);
+    box-shadow:
+        0 0 20px var(--tron-cyan),
+        0 0 40px var(--tron-cyan),
+        inset 0 0 10px rgba(255, 255, 255, 0.8);
 }
 
 .tron-header::before {
-    top: -2px;
-    left: -2px;
+    top: -3px;
+    left: -3px;
 }
 
 .tron-header::after {
-    bottom: -2px;
-    right: -2px;
+    bottom: -3px;
+    right: -3px;
 }
 
 .logo {
@@ -201,14 +239,20 @@ body {
     left: 50%;
     width: 0;
     height: 2px;
-    background: var(--tron-cyan);
-    box-shadow: 0 0 5px var(--tron-cyan);
+    background:
+        linear-gradient(90deg, transparent 0%, var(--white-highlight) 50%, transparent 100%);
+    box-shadow:
+        0 0 10px var(--tron-cyan),
+        0 0 20px var(--tron-cyan);
     transition: all 0.3s ease;
     transform: translateX(-50%);
 }
 
 .nav-link:hover {
     color: var(--tron-cyan);
+    text-shadow:
+        0 0 10px var(--tron-cyan),
+        0 0 20px var(--tron-cyan);
 }
 
 .nav-link:hover::before {
@@ -220,16 +264,24 @@ body {
     align-items: center;
     gap: 10px;
     padding: 10px 20px;
-    border: 1px solid var(--tron-cyan);
-    background: rgba(0, 217, 255, 0.05);
+    border: 2px solid var(--tron-cyan);
+    background:
+        linear-gradient(135deg, rgba(10, 10, 15, 0.9) 0%, rgba(0, 0, 0, 0.95) 100%);
+    box-shadow:
+        0 0 20px rgba(0, 229, 255, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .status-indicator {
     width: 12px;
     height: 12px;
-    background: var(--tron-cyan);
+    background:
+        radial-gradient(circle, var(--white-highlight) 0%, var(--tron-cyan) 100%);
     border-radius: 50%;
-    box-shadow: 0 0 10px var(--tron-cyan);
+    box-shadow:
+        0 0 15px var(--tron-cyan),
+        0 0 30px var(--tron-cyan),
+        inset 0 0 6px rgba(255, 255, 255, 0.6);
     animation: pulse 2s infinite;
 }
 
@@ -269,36 +321,49 @@ body {
 
 /* Grid Item Styles */
 .grid-item {
-    background: rgba(0, 217, 255, 0.02);
-    border: 2px solid var(--tron-cyan);
+    background:
+        linear-gradient(135deg, rgba(10, 10, 15, 0.95) 0%, rgba(0, 0, 0, 0.98) 100%);
+    border: 3px solid var(--tron-cyan);
     position: relative;
     cursor: pointer;
     overflow: hidden;
     transition: all 0.3s ease;
     animation: fadeInGrid 0.8s ease backwards;
+    box-shadow:
+        0 0 20px rgba(0, 229, 255, 0.4),
+        inset 0 0 30px rgba(0, 229, 255, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 .grid-item::before {
     content: '';
     position: absolute;
-    top: -2px;
-    left: -2px;
-    width: 8px;
-    height: 8px;
-    background: var(--tron-cyan);
-    box-shadow: 0 0 10px var(--tron-cyan);
+    top: -3px;
+    left: -3px;
+    width: 12px;
+    height: 12px;
+    background:
+        radial-gradient(circle, var(--white-highlight) 0%, var(--tron-cyan) 100%);
+    box-shadow:
+        0 0 15px var(--tron-cyan),
+        0 0 30px var(--tron-cyan),
+        inset 0 0 8px rgba(255, 255, 255, 0.8);
     z-index: 2;
 }
 
 .grid-item::after {
     content: '';
     position: absolute;
-    bottom: -2px;
-    right: -2px;
-    width: 8px;
-    height: 8px;
-    background: var(--tron-cyan);
-    box-shadow: 0 0 10px var(--tron-cyan);
+    bottom: -3px;
+    right: -3px;
+    width: 12px;
+    height: 12px;
+    background:
+        radial-gradient(circle, var(--white-highlight) 0%, var(--tron-cyan) 100%);
+    box-shadow:
+        0 0 15px var(--tron-cyan),
+        0 0 30px var(--tron-cyan),
+        inset 0 0 8px rgba(255, 255, 255, 0.8);
     z-index: 2;
 }
 
@@ -335,11 +400,16 @@ body {
 }
 
 .grid-item:hover {
-    background: rgba(0, 217, 255, 0.05);
+    background:
+        linear-gradient(135deg, rgba(15, 15, 25, 0.98) 0%, rgba(0, 0, 0, 1) 100%);
     box-shadow:
-        0 0 30px rgba(0, 217, 255, 0.4),
-        inset 0 0 20px rgba(0, 217, 255, 0.1);
+        0 0 40px rgba(0, 229, 255, 0.8),
+        0 0 80px rgba(0, 229, 255, 0.5),
+        inset 0 0 40px rgba(0, 229, 255, 0.15),
+        inset 0 2px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -2px 0 rgba(0, 229, 255, 0.4);
     transform: translateY(-5px);
+    border-color: var(--white-highlight);
 }
 
 .grid-item:hover .item-border {
@@ -368,7 +438,10 @@ body {
     height: 80px;
     margin-bottom: 20px;
     color: var(--tron-cyan);
-    filter: drop-shadow(0 0 5px var(--tron-cyan));
+    filter:
+        drop-shadow(0 0 10px var(--tron-cyan))
+        drop-shadow(0 0 20px var(--tron-cyan))
+        drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
 }
 
 .icon-hex.small {
@@ -381,7 +454,11 @@ body {
     font-weight: 700;
     margin-bottom: 10px;
     color: var(--tron-cyan);
-    text-shadow: 0 0 5px var(--tron-cyan);
+    text-shadow:
+        0 0 10px var(--tron-cyan),
+        0 0 20px var(--tron-cyan),
+        0 0 30px var(--tron-cyan),
+        0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .desc {
@@ -394,17 +471,26 @@ body {
 
 .status-bar {
     width: 100%;
-    height: 4px;
-    background: rgba(0, 217, 255, 0.2);
+    height: 6px;
+    background:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 229, 255, 0.2) 100%);
     margin: 15px 0;
     position: relative;
     overflow: hidden;
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 0 10px rgba(0, 229, 255, 0.2);
 }
 
 .status-fill {
     height: 100%;
-    background: var(--tron-cyan);
-    box-shadow: 0 0 10px var(--tron-cyan);
+    background:
+        linear-gradient(90deg, var(--tron-cyan) 0%, var(--white-highlight) 50%, var(--tron-cyan) 100%);
+    box-shadow:
+        0 0 15px var(--tron-cyan),
+        0 0 30px var(--tron-cyan),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
     transition: width 1s ease;
 }
 
@@ -413,7 +499,10 @@ body {
     font-size: 18px;
     font-weight: 700;
     color: var(--tron-cyan);
-    text-shadow: 0 0 10px var(--tron-cyan);
+    text-shadow:
+        0 0 15px var(--tron-cyan),
+        0 0 30px var(--tron-cyan),
+        0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .notification-count {
@@ -432,13 +521,20 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 217, 255, 0.1);
+    background:
+        linear-gradient(135deg, rgba(10, 10, 15, 0.9) 0%, rgba(0, 0, 0, 0.95) 100%);
     border: 2px solid var(--tron-cyan);
     font-size: 18px;
     font-weight: 700;
     color: var(--tron-cyan);
-    text-shadow: 0 0 5px var(--tron-cyan);
-    box-shadow: 0 0 10px rgba(0, 217, 255, 0.3);
+    text-shadow:
+        0 0 10px var(--tron-cyan),
+        0 0 20px var(--tron-cyan),
+        0 1px 0 rgba(255, 255, 255, 0.3);
+    box-shadow:
+        0 0 20px rgba(0, 229, 255, 0.6),
+        0 0 40px rgba(0, 229, 255, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .label {
@@ -449,32 +545,39 @@ body {
 /* Footer */
 .tron-footer {
     padding: 25px 40px;
-    background: rgba(0, 217, 255, 0.03);
-    border: 2px solid var(--tron-cyan);
+    background:
+        linear-gradient(180deg, rgba(10, 10, 15, 0.9) 0%, rgba(0, 0, 0, 0.95) 100%);
+    border: 3px solid var(--tron-cyan);
     position: relative;
     box-shadow:
-        0 0 20px rgba(0, 217, 255, 0.3),
-        inset 0 0 20px rgba(0, 217, 255, 0.05);
+        0 0 30px rgba(0, 229, 255, 0.6),
+        0 0 60px rgba(0, 229, 255, 0.3),
+        inset 0 0 30px rgba(0, 229, 255, 0.1),
+        inset 0 -2px 0 rgba(255, 255, 255, 0.2);
 }
 
 .tron-footer::before,
 .tron-footer::after {
     content: '';
     position: absolute;
-    width: 10px;
-    height: 10px;
-    background: var(--tron-cyan);
-    box-shadow: 0 0 10px var(--tron-cyan);
+    width: 15px;
+    height: 15px;
+    background:
+        radial-gradient(circle, var(--white-highlight) 0%, var(--tron-cyan) 100%);
+    box-shadow:
+        0 0 20px var(--tron-cyan),
+        0 0 40px var(--tron-cyan),
+        inset 0 0 10px rgba(255, 255, 255, 0.8);
 }
 
 .tron-footer::before {
-    top: -2px;
-    right: -2px;
+    top: -3px;
+    right: -3px;
 }
 
 .tron-footer::after {
-    bottom: -2px;
-    left: -2px;
+    bottom: -3px;
+    left: -3px;
 }
 
 .footer-content {
@@ -503,17 +606,24 @@ body {
     font-size: 20px;
     font-weight: 700;
     color: var(--tron-cyan);
-    text-shadow: 0 0 5px var(--tron-cyan);
+    text-shadow:
+        0 0 15px var(--tron-cyan),
+        0 0 30px var(--tron-cyan),
+        0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .status-ok {
     color: #0f0;
-    text-shadow: 0 0 5px #0f0;
+    text-shadow:
+        0 0 15px #0f0,
+        0 0 30px #0f0,
+        0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .back-link {
     padding: 15px 30px;
-    background: rgba(0, 217, 255, 0.05);
+    background:
+        linear-gradient(135deg, rgba(10, 10, 15, 0.9) 0%, rgba(0, 0, 0, 0.95) 100%);
     border: 2px solid var(--tron-cyan);
     color: var(--tron-cyan);
     text-decoration: none;
@@ -522,6 +632,12 @@ body {
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    box-shadow:
+        0 0 20px rgba(0, 229, 255, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    text-shadow:
+        0 0 10px var(--tron-cyan),
+        0 0 20px var(--tron-cyan);
 }
 
 .back-link::before {
@@ -531,7 +647,8 @@ body {
     left: 50%;
     width: 0;
     height: 0;
-    background: rgba(0, 217, 255, 0.2);
+    background:
+        radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(0, 229, 255, 0.3) 100%);
     border-radius: 50%;
     transform: translate(-50%, -50%);
     transition: all 0.5s ease;
@@ -543,7 +660,11 @@ body {
 }
 
 .back-link:hover {
-    box-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+    box-shadow:
+        0 0 30px rgba(0, 229, 255, 0.8),
+        0 0 60px rgba(0, 229, 255, 0.5),
+        inset 0 2px 0 rgba(255, 255, 255, 0.3);
+    border-color: var(--white-highlight);
 }
 
 .back-link span {
