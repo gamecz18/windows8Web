@@ -5,24 +5,24 @@
 }
 
 :root {
-    /* Windows 8 Metro Colors */
-    --metro-blue: #0078d4;
-    --metro-purple: #8e44ad;
-    --metro-green: #00a300;
-    --metro-orange: #ff8c00;
-    --metro-red: #e74c3c;
-    --metro-teal: #00aba9;
-    --metro-pink: #e91e63;
-    --metro-yellow: #ffc107;
-    --metro-indigo: #6a00ff;
-    --metro-cyan: #00bcd4;
-    --metro-lime: #8bc34a;
-    --metro-amber: #ff9800;
+    /* Windows 8 Metro Colors - Red Theme */
+    --metro-red: #ff3b3b;
+    --metro-crimson: #dc143c;
+    --metro-pink: #ff1744;
+    --metro-rose: #ff4081;
+    --metro-coral: #ff6b6b;
+    --metro-orange: #ff5722;
+    --metro-amber: #ff6f00;
+    --metro-purple: #c2185b;
+    --metro-magenta: #e91e63;
+    --metro-salmon: #ff7961;
+    --metro-ruby: #b71c1c;
+    --metro-scarlet: #f44336;
 
-    /* Glass effect properties */
-    --glass-bg: rgba(255, 255, 255, 0.1);
-    --glass-border: rgba(255, 255, 255, 0.2);
-    --glass-shadow: rgba(0, 0, 0, 0.1);
+    /* Enhanced Liquid Glass effect properties */
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --glass-shadow: rgba(0, 0, 0, 0.15);
 }
 
 body {
@@ -41,40 +41,40 @@ body {
     width: 100%;
     height: 100%;
     z-index: -1;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #ff1744 0%, #b71c1c 50%, #c2185b 100%);
     overflow: hidden;
 }
 
 .gradient-orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.6;
+    filter: blur(100px);
+    opacity: 0.7;
     animation: float 20s infinite ease-in-out;
 }
 
 .orb-1 {
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, #667eea, #764ba2);
-    top: -200px;
-    left: -200px;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, #ff3b3b, #dc143c);
+    top: -250px;
+    left: -250px;
     animation-delay: 0s;
 }
 
 .orb-2 {
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, #f093fb, #f5576c);
-    bottom: -150px;
-    right: -150px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, #ff6b6b, #ff1744);
+    bottom: -200px;
+    right: -200px;
     animation-delay: 7s;
 }
 
 .orb-3 {
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, #4facfe, #00f2fe);
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, #ff4081, #c2185b);
     top: 50%;
     left: 50%;
     animation-delay: 14s;
@@ -105,25 +105,31 @@ body {
 /* Glass Effects */
 .glass-element {
     background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
     border: 1px solid var(--glass-border);
-    box-shadow: 0 8px 32px var(--glass-shadow);
+    box-shadow: 0 8px 32px var(--glass-shadow),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .glass-tile {
     background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
     border: 1px solid var(--glass-border);
-    box-shadow: 0 8px 32px var(--glass-shadow);
+    box-shadow: 0 8px 32px var(--glass-shadow),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-tile:hover {
     transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
-    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(50px) saturate(200%);
+    -webkit-backdrop-filter: blur(50px) saturate(200%);
 }
 
 .glass-tile:active {
@@ -161,7 +167,8 @@ nav {
 .glass-button {
     padding: 12px 24px;
     background: var(--glass-bg);
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
     border: 1px solid var(--glass-border);
     border-radius: 12px;
     color: white;
@@ -170,12 +177,18 @@ nav {
     font-weight: 400;
     transition: all 0.3s ease;
     cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .glass-button:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
     transform: translateY(-2px);
+    backdrop-filter: blur(40px) saturate(200%);
+    -webkit-backdrop-filter: blur(40px) saturate(200%);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .user-info {
@@ -187,7 +200,8 @@ nav {
     width: 45px;
     height: 45px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #ff3b3b, #c2185b);
+    box-shadow: 0 4px 16px rgba(255, 27, 68, 0.4);
 }
 
 /* Tiles Grid */
@@ -279,8 +293,9 @@ nav {
     position: absolute;
     top: 20px;
     right: 20px;
-    background: rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
     width: 32px;
     height: 32px;
     border-radius: 50%;
@@ -289,22 +304,60 @@ nav {
     justify-content: center;
     font-size: 14px;
     font-weight: 600;
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
-/* Metro Color Tiles */
-.tile-blue { background: linear-gradient(135deg, var(--metro-blue), #005a9e); }
-.tile-purple { background: linear-gradient(135deg, var(--metro-purple), #6c3483); }
-.tile-green { background: linear-gradient(135deg, var(--metro-green), #007a00); }
-.tile-orange { background: linear-gradient(135deg, var(--metro-orange), #cc7000); }
-.tile-red { background: linear-gradient(135deg, var(--metro-red), #c0392b); }
-.tile-teal { background: linear-gradient(135deg, var(--metro-teal), #008584); }
-.tile-pink { background: linear-gradient(135deg, var(--metro-pink), #c2185b); }
-.tile-yellow { background: linear-gradient(135deg, var(--metro-yellow), #ffa000); }
-.tile-indigo { background: linear-gradient(135deg, var(--metro-indigo), #5500cc); }
-.tile-cyan { background: linear-gradient(135deg, var(--metro-cyan), #0097a7); }
-.tile-lime { background: linear-gradient(135deg, var(--metro-lime), #689f38); }
-.tile-amber { background: linear-gradient(135deg, var(--metro-amber), #f57c00); }
+/* Metro Color Tiles - Red Theme */
+.tile-red {
+    background: linear-gradient(135deg, var(--metro-red), var(--metro-crimson));
+    box-shadow: 0 8px 32px rgba(255, 59, 59, 0.3);
+}
+.tile-crimson {
+    background: linear-gradient(135deg, var(--metro-crimson), var(--metro-ruby));
+    box-shadow: 0 8px 32px rgba(220, 20, 60, 0.3);
+}
+.tile-pink {
+    background: linear-gradient(135deg, var(--metro-pink), var(--metro-rose));
+    box-shadow: 0 8px 32px rgba(255, 23, 68, 0.3);
+}
+.tile-rose {
+    background: linear-gradient(135deg, var(--metro-rose), var(--metro-magenta));
+    box-shadow: 0 8px 32px rgba(255, 64, 129, 0.3);
+}
+.tile-coral {
+    background: linear-gradient(135deg, var(--metro-coral), var(--metro-salmon));
+    box-shadow: 0 8px 32px rgba(255, 107, 107, 0.3);
+}
+.tile-orange {
+    background: linear-gradient(135deg, var(--metro-orange), var(--metro-amber));
+    box-shadow: 0 8px 32px rgba(255, 87, 34, 0.3);
+}
+.tile-amber {
+    background: linear-gradient(135deg, var(--metro-amber), #e65100);
+    box-shadow: 0 8px 32px rgba(255, 111, 0, 0.3);
+}
+.tile-purple {
+    background: linear-gradient(135deg, var(--metro-purple), #880e4f);
+    box-shadow: 0 8px 32px rgba(194, 24, 91, 0.3);
+}
+.tile-magenta {
+    background: linear-gradient(135deg, var(--metro-magenta), var(--metro-purple));
+    box-shadow: 0 8px 32px rgba(233, 30, 99, 0.3);
+}
+.tile-salmon {
+    background: linear-gradient(135deg, var(--metro-salmon), #ff5252);
+    box-shadow: 0 8px 32px rgba(255, 121, 97, 0.3);
+}
+.tile-ruby {
+    background: linear-gradient(135deg, var(--metro-ruby), #8b0000);
+    box-shadow: 0 8px 32px rgba(183, 28, 28, 0.3);
+}
+.tile-scarlet {
+    background: linear-gradient(135deg, var(--metro-scarlet), var(--metro-red));
+    box-shadow: 0 8px 32px rgba(244, 67, 54, 0.3);
+}
 
 /* Footer */
 .glass-footer {
@@ -322,6 +375,8 @@ nav {
 .time-widget {
     padding: 15px 25px;
     border-radius: 15px;
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
 }
 
 .time {
