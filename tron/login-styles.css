@@ -805,3 +805,159 @@ body {
         transform: translate(-120px, -120px) rotate(270deg);
     }
 }
+
+/* Laser Beam Animation */
+.laser-beam {
+    position: fixed;
+    width: 6px;
+    height: 100vh;
+    display: none;
+    pointer-events: none;
+    z-index: 1000;
+    transform-origin: top center;
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 59, 59, 0.3) 20%,
+        rgba(255, 27, 68, 0.9) 50%,
+        rgba(255, 59, 59, 1) 80%,
+        rgba(255, 255, 255, 1) 100%
+    );
+    box-shadow:
+        0 0 10px rgba(255, 59, 59, 1),
+        0 0 20px rgba(255, 27, 68, 0.8),
+        0 0 40px rgba(255, 59, 59, 0.6),
+        0 0 80px rgba(255, 27, 68, 0.4);
+    filter: blur(1px);
+    opacity: 0.9;
+    transition: opacity 0.5s ease-out;
+}
+
+/* Laser Impact Point */
+.laser-impact {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    margin-left: -20px;
+    margin-top: -20px;
+    display: none;
+    pointer-events: none;
+    z-index: 999;
+    background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 1) 0%,
+        rgba(255, 59, 59, 1) 20%,
+        rgba(255, 27, 68, 0.8) 40%,
+        rgba(255, 59, 59, 0.4) 60%,
+        transparent 100%
+    );
+    box-shadow:
+        0 0 30px rgba(255, 255, 255, 1),
+        0 0 60px rgba(255, 59, 59, 1),
+        0 0 90px rgba(255, 27, 68, 0.8),
+        0 0 120px rgba(255, 59, 59, 0.6);
+    border-radius: 50%;
+    opacity: 0.95;
+    animation: impactPulse 0.3s ease-in-out infinite;
+    transition: opacity 0.5s ease-out;
+}
+
+@keyframes impactPulse {
+    0%, 100% {
+        transform: scale(1);
+        filter: brightness(1.2);
+    }
+    50% {
+        transform: scale(1.15);
+        filter: brightness(1.5);
+    }
+}
+
+/* Individual Letters */
+.engraved-username .letter {
+    display: inline-block;
+    position: relative;
+    transition: opacity 0.1s ease-out;
+}
+
+/* Letter Burning State */
+.engraved-username .letter.burning {
+    animation: letterBurn 0.2s ease-out;
+}
+
+@keyframes letterBurn {
+    0% {
+        filter: brightness(8) blur(8px);
+        text-shadow:
+            0 0 100px rgba(255, 255, 255, 1),
+            0 0 80px rgba(255, 59, 59, 1),
+            0 0 60px rgba(255, 27, 68, 1),
+            0 0 40px rgba(255, 59, 59, 1);
+        transform: scale(1.3);
+    }
+    30% {
+        filter: brightness(4) blur(4px);
+        text-shadow:
+            0 0 80px rgba(255, 255, 255, 0.9),
+            0 0 60px rgba(255, 59, 59, 1),
+            0 0 40px rgba(255, 27, 68, 0.8);
+        transform: scale(1.15);
+    }
+    100% {
+        filter: brightness(1) blur(0px);
+        transform: scale(1);
+    }
+}
+
+/* Letter Burned State */
+.engraved-username .letter.burned {
+    color: #0a0005;
+    text-shadow:
+        /* Glowing ember edges */
+        0 0 20px rgba(255, 59, 59, 0.8),
+        0 0 40px rgba(255, 27, 68, 0.6),
+        0 0 60px rgba(220, 20, 60, 0.4),
+        0 0 80px rgba(255, 107, 107, 0.3),
+        /* Charred center */
+        inset 0 0 30px rgba(0, 0, 0, 0.9),
+        /* Depth shadow */
+        0 4px 10px rgba(0, 0, 0, 0.9),
+        0 8px 20px rgba(0, 0, 0, 0.7);
+}
+
+/* Spark Particles */
+.spark {
+    position: fixed;
+    width: 4px;
+    height: 4px;
+    background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 1) 0%,
+        rgba(255, 59, 59, 1) 50%,
+        rgba(255, 27, 68, 0.5) 100%
+    );
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 998;
+    box-shadow:
+        0 0 8px rgba(255, 59, 59, 1),
+        0 0 16px rgba(255, 27, 68, 0.8);
+    animation: sparkFly 0.8s ease-out forwards;
+}
+
+@keyframes sparkFly {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+        filter: brightness(2);
+    }
+    50% {
+        opacity: 0.8;
+        filter: brightness(1.5);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(var(--vx), var(--vy)) scale(0.3);
+        filter: brightness(0.5);
+    }
+}

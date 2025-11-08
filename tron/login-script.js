@@ -70,13 +70,132 @@ async function performLogin(username) {
 }
 
 function engraveUsername(username) {
-    // Set the username text
-    engravedUsername.textContent = username.toUpperCase();
+    const text = username.toUpperCase();
 
-    // Trigger the engraving animation
+    // Split text into individual letters
+    engravedUsername.innerHTML = '';
+    const letters = text.split('').map(char => {
+        const span = document.createElement('span');
+        span.textContent = char;
+        span.className = 'letter';
+        span.style.opacity = '0';
+        engravedUsername.appendChild(span);
+        return span;
+    });
+
+    // Create laser beam element
+    const laserBeam = document.createElement('div');
+    laserBeam.className = 'laser-beam';
+    document.body.appendChild(laserBeam);
+
+    // Create laser impact point
+    const laserImpact = document.createElement('div');
+    laserImpact.className = 'laser-impact';
+    document.body.appendChild(laserImpact);
+
+    // Show the container first
     setTimeout(() => {
         engravedUsername.classList.add('active');
     }, 100);
+
+    // Animate laser across the text
+    const duration = 2500; // Total animation duration
+    const startDelay = 300;
+
+    setTimeout(() => {
+        // Start laser from left side
+        laserBeam.style.display = 'block';
+        laserImpact.style.display = 'block';
+
+        const textRect = engravedUsername.getBoundingClientRect();
+        const startX = textRect.left - 200;
+        const endX = textRect.right + 200;
+        const centerY = textRect.top + textRect.height / 2;
+
+        let progress = 0;
+        const animationDuration = duration;
+        const startTime = Date.now();
+
+        function animateLaser() {
+            const elapsed = Date.now() - startTime;
+            progress = Math.min(elapsed / animationDuration, 1);
+
+            // Calculate laser position
+            const currentX = startX + (endX - startX) * progress;
+
+            // Update laser beam position
+            laserBeam.style.left = currentX + 'px';
+            laserBeam.style.top = (centerY - 300) + 'px';
+            laserBeam.style.bottom = '0';
+
+            // Update impact point
+            laserImpact.style.left = currentX + 'px';
+            laserImpact.style.top = centerY + 'px';
+
+            // Reveal letters as laser passes over them
+            letters.forEach((letter, index) => {
+                const letterRect = letter.getBoundingClientRect();
+                const letterCenter = letterRect.left + letterRect.width / 2;
+
+                if (currentX >= letterCenter - 20 && letter.style.opacity === '0') {
+                    // Burn in the letter
+                    letter.style.opacity = '1';
+                    letter.classList.add('burning');
+
+                    // Create sparks at letter position
+                    createSparks(letterCenter, centerY);
+
+                    setTimeout(() => {
+                        letter.classList.remove('burning');
+                        letter.classList.add('burned');
+                    }, 200);
+                }
+            });
+
+            if (progress < 1) {
+                requestAnimationFrame(animateLaser);
+            } else {
+                // Laser finished, fade it out
+                laserBeam.style.opacity = '0';
+                laserImpact.style.opacity = '0';
+
+                setTimeout(() => {
+                    laserBeam.remove();
+                    laserImpact.remove();
+                }, 500);
+            }
+        }
+
+        animateLaser();
+    }, startDelay);
+}
+
+// Create spark particles at laser impact
+function createSparks(x, y) {
+    const sparkCount = 8;
+
+    for (let i = 0; i < sparkCount; i++) {
+        const spark = document.createElement('div');
+        spark.className = 'spark';
+        spark.style.left = x + 'px';
+        spark.style.top = y + 'px';
+
+        // Random angle and velocity
+        const angle = (Math.random() * 360) * Math.PI / 180;
+        const velocity = Math.random() * 100 + 50;
+        const vx = Math.cos(angle) * velocity;
+        const vy = Math.sin(angle) * velocity;
+
+        spark.style.setProperty('--vx', vx + 'px');
+        spark.style.setProperty('--vy', vy + 'px');
+
+        document.body.appendChild(spark);
+
+        // Remove spark after animation
+        setTimeout(() => {
+            spark.remove();
+        }, 800);
+    }
 }
 
 function showStatus(message, type) {
